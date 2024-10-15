@@ -16,8 +16,18 @@ const findAllEarthquakes = async () => {
   return await Earthquake.find();
 };
 
+const findEarthquakesByCountry = async (country) => {
+  try {
+    return await Earthquake.find({ country: country });
+  } catch (error) {
+    console.error("Veri çekme hatası:", error);
+    throw error; // Hatanın üst katmana fırlatılması
+  }
+};
+
 module.exports = {
   saveEarthquake,
   findEarthquakesByCity,
   findAllEarthquakes,
+  findEarthquakesByCountry,
 };

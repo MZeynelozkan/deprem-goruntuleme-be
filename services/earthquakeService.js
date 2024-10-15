@@ -32,8 +32,23 @@ const getAllEarthquakes = async () => {
   return await earthquakeRepository.findAllEarthquakes();
 };
 
+// Ülkeye göre depremleri listeleme
+const getCitiesByCountry = async (country) => {
+  if (!country) {
+    throw new Error("Ülke adı gerekli");
+  }
+
+  try {
+    return await earthquakeRepository.findEarthquakesByCountry(country);
+  } catch (error) {
+    console.error("Veri çekme hatası:", error); // Hatanın konsola yazdırılması
+    throw error; // Hatanın üst katmana fırlatılması
+  }
+};
+
 module.exports = {
   addEarthquake,
   getEarthquakesByCity,
   getAllEarthquakes,
+  getCitiesByCountry,
 };

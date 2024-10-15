@@ -35,8 +35,29 @@ const getAllEarthquakes = async (req, res) => {
   }
 };
 
+const getCitiesByCountry = async (req, res) => {
+  const country = req.params.country;
+
+  try {
+    const cities = await earthquakeService.getCitiesByCountry(country);
+    if (cities.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No cities found for this country." });
+    }
+    res.json(cities);
+  } catch (error) {
+    console.error("Hata:", error); // Hatanın konsola yazdırılması
+    res.status(500).json({
+      message: "An error occurred while fetching cities.",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   addEarthquake,
   getEarthquakesByCity,
   getAllEarthquakes,
+  getCitiesByCountry,
 };

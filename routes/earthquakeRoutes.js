@@ -8,6 +8,8 @@ router.post("/add", earthquakeController.addEarthquake);
 // GET: Şehre göre depremleri listeleme
 router.get("/city/:city", earthquakeController.getEarthquakesByCity);
 
+router.get("/cities/:country", earthquakeController.getCitiesByCountry);
+
 // GET: Tüm depremleri listeleme
 router.get("/all", earthquakeController.getAllEarthquakes);
 
