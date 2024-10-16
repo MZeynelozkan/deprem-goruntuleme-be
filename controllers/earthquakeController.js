@@ -17,6 +17,15 @@ const addEarthquake = async (req, res) => {
   }
 };
 
+const getCountries = async (req, res) => {
+  try {
+    const countries = await earthquakeService.getCountries();
+    res.status(200).json(countries);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Şehre göre depremleri listeleme
 const getEarthquakesByCity = async (req, res) => {
   try {
@@ -88,11 +97,19 @@ const addCountry = async (req, res) => {
   }
 };
 
-const getCountryWithCities = async ({ name }) => {
+const getCountryWithCities = async (req, res) => {
   try {
-    const country = await Country.findOne({ name }).populate("cities");
+    const { country } = req.params; // Extract 'country' from request params
+    const countryData = await Country.findOne({ name: country }).populate(
+      "cities"
+    ); // Use 'name' to query the country
+    if (!countryData) {
+      return res.status(404).json({ message: "Country not found" });
+    }
+    return res.status(200).json(countryData);
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -105,4 +122,5 @@ module.exports = {
   addCountry,
   addCity,
   getCountryWithCities,
+  getCountries,
 };

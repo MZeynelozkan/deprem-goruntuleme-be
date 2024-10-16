@@ -1,4 +1,5 @@
 const City = require("../models/cityModel");
+const Country = require("../models/countryModel");
 const earthquakeRepository = require("../repositories/earthquakeRepository");
 
 // Deprem verisi ekleme
@@ -85,6 +86,10 @@ const addCountry = async (cityId) => {
   await country.save();
 };
 
+const getCountries = async () => {
+  return await Country.find();
+};
+
 module.exports = {
   addEarthquake,
   getEarthquakesByCity,
@@ -93,4 +98,5 @@ module.exports = {
   getEarthquakesByScale,
   addCity,
   addCountry,
+  getCountries,
 };

@@ -18,5 +18,6 @@ router.get("/cities/:country", earthquakeController.getCitiesByCountry);
 
 // GET: Tüm depremleri listeleme
 router.get("/all", earthquakeController.getAllEarthquakes);
+router.get("/countries", earthquakeController.getCountries);
 
 module.exports = router;
