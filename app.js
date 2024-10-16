@@ -1,5 +1,5 @@
 const express = require("express");
-const connectDB = require("./config/db");
+const DB = require("./config/db");
 const earthquakeRoutes = require("./routes/earthquakeRoutes");
 const dotenv = require("dotenv");
 
@@ -8,7 +8,6 @@ dotenv.config(); // Çevresel değişkenleri yükler
 const app = express();
 
 // MongoDB bağlantısı
-connectDB();
 
 // JSON middleware
 app.use(express.json());

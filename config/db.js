@@ -3,17 +3,41 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("MongoDB connected successfully");
-  } catch (error) {
-    console.error("MongoDB connection error:", error.message);
-    process.exit(1); // Sunucuyu durdurur
-  }
-};
+// Singleton Deseni
 
-module.exports = connectDB;
+class DB {
+  static _instance = null;
+  _DB_CONNECTION = null;
+
+  constructor() {
+    if (DB._instance) {
+      return DB._instance;
+    }
+
+    this._DB_CONNECTION = this.connectDB();
+
+    DB._instance = this;
+    return this;
+  }
+
+  async connectDB() {
+    if (!this._DB_CONNECTION) {
+      try {
+        await mongoose.connect(process.env.MONGO_URI, {});
+        console.log("MongoDB başarıyla bağlandı.");
+        return mongoose.connection.readyState === 1;
+      } catch (error) {
+        console.error("MongoDB bağlantı hatası:", error.message);
+        process.exit(1);
+      }
+    }
+    return this._DB_CONNECTION;
+  }
+
+  DB_INSTANCE() {
+    // Bağlantının tamamlanmasını bekle
+    return this._DB_CONNECTION;
+  }
+}
+
+module.exports = new DB();
