@@ -1,6 +1,8 @@
 const express = require("express");
 const earthquakeService = require("../services/earthquakeService");
 const { get } = require("mongoose");
+const City = require("../models/cityModel");
+const Country = require("../models/countryModel");
 
 // Yeni deprem ekleme
 const addEarthquake = async (req, res) => {
@@ -66,10 +68,41 @@ const getCitiesByCountry = async (req, res) => {
   }
 };
 
+const addCity = async (req, res) => {
+  try {
+    const city = req.body;
+    const savedCity = await City.create(city);
+    res.status(201).json(savedCity);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const addCountry = async (req, res) => {
+  try {
+    const country = req.body;
+    const savedCountry = await Country.create(country);
+    res.status(201).json(savedCountry);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const getCountryWithCities = async ({ name }) => {
+  try {
+    const country = await Country.findOne({ name }).populate("cities");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   addEarthquake,
   getEarthquakesByCity,
   getAllEarthquakes,
   getCitiesByCountry,
   getEarthquakesByScale,
+  addCountry,
+  addCity,
+  getCountryWithCities,
 };

@@ -1,3 +1,4 @@
+const City = require("../models/cityModel");
 const earthquakeRepository = require("../repositories/earthquakeRepository");
 
 // Deprem verisi ekleme
@@ -53,10 +54,43 @@ const getCitiesByCountry = async (country) => {
   }
 };
 
+const addCity = async ({
+  name,
+  location,
+  recentEarthquakes: { date, magnitude, depth },
+}) => {
+  const city = new City({
+    name,
+    location,
+    recentEarthquakes: [
+      {
+        date,
+        magnitude,
+        depth,
+      },
+    ],
+  });
+
+  await city.save();
+
+  return city._id; // save asenkron olduğu için Promise döner
+};
+
+const addCountry = async (cityId) => {
+  const country = new Country({
+    name: "Türkiye",
+    averageLocation: { latitude: 39.9334, longitude: 32.8597 },
+    cities: [cityId], // İstanbul şehrini ekle
+  });
+  await country.save();
+};
+
 module.exports = {
   addEarthquake,
   getEarthquakesByCity,
   getAllEarthquakes,
   getCitiesByCountry,
   getEarthquakesByScale,
+  addCity,
+  addCountry,
 };
