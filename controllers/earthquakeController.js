@@ -1,5 +1,6 @@
 const express = require("express");
 const earthquakeService = require("../services/earthquakeService");
+const { get } = require("mongoose");
 
 // Yeni deprem ekleme
 const addEarthquake = async (req, res) => {
@@ -35,6 +36,16 @@ const getAllEarthquakes = async (req, res) => {
   }
 };
 
+const getEarthquakesByScale = async (req, res) => {
+  try {
+    const scale = req.params.scale;
+    const earthquakes = await earthquakeService.getEarthquakesByScale(scale);
+    res.status(200).json(earthquakes);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 const getCitiesByCountry = async (req, res) => {
   const country = req.params.country;
 
@@ -60,4 +71,5 @@ module.exports = {
   getEarthquakesByCity,
   getAllEarthquakes,
   getCitiesByCountry,
+  getEarthquakesByScale,
 };

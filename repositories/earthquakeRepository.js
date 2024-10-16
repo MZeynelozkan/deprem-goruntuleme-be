@@ -25,9 +25,18 @@ const findEarthquakesByCountry = async (country) => {
   }
 };
 
+const findEarthquakesByScale = async (scale) => {
+  try {
+    return await Earthquake.find({ magnitude: { $gte: scale } });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 module.exports = {
   saveEarthquake,
   findEarthquakesByCity,
   findAllEarthquakes,
   findEarthquakesByCountry,
+  findEarthquakesByScale,
 };
