@@ -20,4 +20,6 @@ router.get("/cities/:country", earthquakeController.getCitiesByCountry);
 router.get("/all", earthquakeController.getAllEarthquakes);
 router.get("/countries", earthquakeController.getCountries);
 
+router.get("/", earthquakeController.getAllCities);
+
 module.exports = router;

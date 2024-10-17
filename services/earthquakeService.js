@@ -41,6 +41,10 @@ const getEarthquakesByScale = async (scale) => {
   return await earthquakeRepository.findEarthquakesByScale(scale);
 };
 
+const getAllCities = async () => {
+  return await earthquakeRepository.getAllCities();
+};
+
 // Ülkeye göre depremleri listeleme
 const getCitiesByCountry = async (country) => {
   if (!country) {
@@ -99,4 +103,5 @@ module.exports = {
   addCity,
   addCountry,
   getCountries,
+  getAllCities,
 };

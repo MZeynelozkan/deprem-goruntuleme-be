@@ -1,4 +1,5 @@
 const Earthquake = require("../models/earthquake");
+const City = require("../models/cityModel");
 
 // Deprem verilerini kaydetme
 const saveEarthquake = async (earthquakeData) => {
@@ -14,6 +15,10 @@ const findEarthquakesByCity = async (city) => {
 // Tüm depremleri listeleme
 const findAllEarthquakes = async () => {
   return await Earthquake.find();
+};
+
+const getAllCities = async () => {
+  return await City.find({});
 };
 
 const findEarthquakesByCountry = async (country) => {
@@ -39,4 +44,5 @@ module.exports = {
   findAllEarthquakes,
   findEarthquakesByCountry,
   findEarthquakesByScale,
+  getAllCities,
 };

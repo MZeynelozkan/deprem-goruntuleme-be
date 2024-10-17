@@ -17,6 +17,15 @@ const addEarthquake = async (req, res) => {
   }
 };
 
+const getAllCities = async (req, res) => {
+  try {
+    const cities = await earthquakeService.getAllCities();
+    res.status(200).json(cities);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
 const getCountries = async (req, res) => {
   try {
     const countries = await earthquakeService.getCountries();
@@ -123,4 +132,5 @@ module.exports = {
   addCity,
   getCountryWithCities,
   getCountries,
+  getAllCities,
 };
