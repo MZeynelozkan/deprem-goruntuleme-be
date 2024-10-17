@@ -2,15 +2,15 @@ const express = require("express");
 const DB = require("./config/db");
 const earthquakeRoutes = require("./routes/earthquakeRoutes");
 const dotenv = require("dotenv");
+const morganMiddleware = require("./middlewares/middlewares");
 
-dotenv.config(); // Çevresel değişkenleri yükler
+dotenv.config();
 
 const app = express();
 
-// MongoDB bağlantısı
-
 // JSON middleware
 app.use(express.json());
+app.use(morganMiddleware);
 
 // Rotalar
 app.use("/api/earthquakes", earthquakeRoutes);
