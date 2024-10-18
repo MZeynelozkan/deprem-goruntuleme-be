@@ -6,6 +6,7 @@ const router = express.Router();
 router.post("/add", earthquakeController.addEarthquake);
 router.post("/city", earthquakeController.addCity);
 router.post("/country", earthquakeController.addCountry);
+router.post("/addcountryandcity", earthquakeController.saveCountryandCity);
 
 // GET: Şehre göre depremleri listeleme
 router.get("/city/:city", earthquakeController.getEarthquakesByCity);

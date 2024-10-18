@@ -17,6 +17,72 @@ const addEarthquake = async (req, res) => {
   }
 };
 
+const saveCountryandCity = async (req, res) => {
+  try {
+    const { cities, country } = req.body;
+
+    // Önce veritabanında ülke var mı kontrol ediyoruz
+    let existingCountry = await Country.findOne({ name: country.name });
+
+    // Şehirlerin ObjectId'lerini tutacak dizi
+    const cityIds = [];
+
+    // Şehirleri kaydediyoruz
+    for (const cityData of cities) {
+      // Şehrin zaten var olup olmadığını kontrol et
+      const existingCity = await City.findOne({ name: cityData.name });
+
+      if (existingCity) {
+        // Şehir zaten varsa ve mevcut ülkeye ait değilse, kaydetme ve devam et
+        if (
+          existingCountry &&
+          existingCountry.cities.includes(existingCity._id)
+        ) {
+          console.log(
+            `Şehir zaten mevcut ve ülkeye eklenmiş: ${cityData.name}`
+          );
+          continue; // Şehir zaten ülkeye eklenmişse atla
+        }
+
+        // Şehir mevcutsa ve ülkeye ekli değilse, sadece ID'yi ekle
+        console.log(`Şehir mevcut, ancak ülkeye eklenmemiş: ${cityData.name}`);
+        cityIds.push(existingCity._id);
+        continue;
+      }
+
+      // Şehir yoksa, kaydet
+      const city = new City(cityData);
+      const savedCity = await city.save(); // Şehri kaydediyoruz
+      cityIds.push(savedCity._id); // Kaydedilen şehrin ObjectId'sini diziye ekliyoruz
+    }
+
+    if (existingCountry) {
+      // Ülke zaten varsa, yeni şehir ID'lerini ekliyoruz
+      existingCountry.cities.push(...cityIds);
+
+      // Tekrarlanan ID'leri kaldırıyoruz
+      existingCountry.cities = [...new Set(existingCountry.cities)];
+      await existingCountry.save(); // Ülkeyi güncelliyoruz
+      res
+        .status(200)
+        .json({ message: "Ülke güncellendi", country: existingCountry });
+    } else {
+      // Ülke yoksa, yeni bir ülke kaydediyoruz
+      const savedCountry = new Country({
+        ...country,
+        cities: cityIds, // Şehir ID'lerini ekliyoruz
+      });
+      await savedCountry.save();
+      res.status(201).json({
+        message: "Yeni ülke ve şehirler eklendi",
+        country: savedCountry,
+      });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 const getAllCities = async (req, res) => {
   try {
     const cities = await earthquakeService.getAllCities();
@@ -133,4 +199,5 @@ module.exports = {
   getCountryWithCities,
   getCountries,
   getAllCities,
+  saveCountryandCity,
 };

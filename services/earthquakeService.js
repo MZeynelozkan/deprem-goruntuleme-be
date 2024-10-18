@@ -20,6 +20,10 @@ const addEarthquake = async (earthquakeData) => {
   return await earthquakeRepository.saveEarthquake(earthquakeData);
 };
 
+const saveCountryAndCities = async (countryData, cityData) => {
+  return await earthquakeRepository.saveCountryAndCities(countryData, cityData);
+};
+
 // Şehre göre depremleri listeleme
 const getEarthquakesByCity = async (city) => {
   if (!city) {
@@ -104,4 +108,5 @@ module.exports = {
   addCountry,
   getCountries,
   getAllCities,
+  saveCountryAndCities,
 };

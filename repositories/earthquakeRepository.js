@@ -1,10 +1,18 @@
 const Earthquake = require("../models/earthquake");
 const City = require("../models/cityModel");
+const Country = require("../models/countryModel");
 
 // Deprem verilerini kaydetme
 const saveEarthquake = async (earthquakeData) => {
   const earthquake = new Earthquake(earthquakeData);
   return await earthquake.save();
+};
+
+const saveCountryAndCities = async (countryData, cityData) => {
+  const city = new City(cityData);
+  const country = new Country({ ...countryData, cities: [city._id] });
+  await country.save();
+  await city.save();
 };
 
 // Belirli bir şehirdeki depremleri bulma
@@ -45,4 +53,5 @@ module.exports = {
   findEarthquakesByCountry,
   findEarthquakesByScale,
   getAllCities,
+  saveCountryAndCities,
 };
