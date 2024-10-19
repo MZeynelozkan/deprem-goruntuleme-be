@@ -21,19 +21,17 @@ const saveCountryandCity = async (req, res) => {
   try {
     const { cities, country } = req.body;
 
-    // Önce veritabanında ülke var mı kontrol ediyoruz
-    let existingCountry = await Country.findOne({ name: country.name });
+    console.log("Received data:", req.body); // Gelen veriyi kontrol et
 
-    // Şehirlerin ObjectId'lerini tutacak dizi
+    let existingCountry = await Country.findOne({ name: country.name });
+    console.log("Existing country:", existingCountry); // Ülke mevcut mu kontrol et
+
     const cityIds = [];
 
-    // Şehirleri kaydediyoruz
     for (const cityData of cities) {
-      // Şehrin zaten var olup olmadığını kontrol et
       const existingCity = await City.findOne({ name: cityData.name });
 
       if (existingCity) {
-        // Şehir zaten varsa ve mevcut ülkeye ait değilse, kaydetme ve devam et
         if (
           existingCountry &&
           existingCountry.cities.includes(existingCity._id)
@@ -41,44 +39,42 @@ const saveCountryandCity = async (req, res) => {
           console.log(
             `Şehir zaten mevcut ve ülkeye eklenmiş: ${cityData.name}`
           );
-          continue; // Şehir zaten ülkeye eklenmişse atla
+          continue;
         }
 
-        // Şehir mevcutsa ve ülkeye ekli değilse, sadece ID'yi ekle
         console.log(`Şehir mevcut, ancak ülkeye eklenmemiş: ${cityData.name}`);
         cityIds.push(existingCity._id);
         continue;
       }
 
-      // Şehir yoksa, kaydet
       const city = new City(cityData);
-      const savedCity = await city.save(); // Şehri kaydediyoruz
-      cityIds.push(savedCity._id); // Kaydedilen şehrin ObjectId'sini diziye ekliyoruz
+      const savedCity = await city.save();
+      console.log(`Yeni şehir kaydedildi: ${savedCity.name}`);
+      cityIds.push(savedCity._id);
     }
 
     if (existingCountry) {
-      // Ülke zaten varsa, yeni şehir ID'lerini ekliyoruz
       existingCountry.cities.push(...cityIds);
-
-      // Tekrarlanan ID'leri kaldırıyoruz
       existingCountry.cities = [...new Set(existingCountry.cities)];
-      await existingCountry.save(); // Ülkeyi güncelliyoruz
+      await existingCountry.save();
+      console.log(`Ülke güncellendi: ${existingCountry.name}`);
       res
         .status(200)
         .json({ message: "Ülke güncellendi", country: existingCountry });
     } else {
-      // Ülke yoksa, yeni bir ülke kaydediyoruz
       const savedCountry = new Country({
         ...country,
-        cities: cityIds, // Şehir ID'lerini ekliyoruz
+        cities: cityIds,
       });
       await savedCountry.save();
+      console.log(`Yeni ülke ve şehirler eklendi: ${savedCountry.name}`);
       res.status(201).json({
         message: "Yeni ülke ve şehirler eklendi",
         country: savedCountry,
       });
     }
   } catch (error) {
+    console.error("Hata oluştu:", error.message); // Hata mesajını logla
     res.status(400).json({ message: error.message });
   }
 };
