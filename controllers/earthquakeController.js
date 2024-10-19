@@ -17,6 +17,27 @@ const addEarthquake = async (req, res) => {
   }
 };
 
+const findCityAndUpdate = async (req, res) => {
+  try {
+    const { city, update } = req.body;
+
+    if (!city || !update) {
+      return res
+        .status(400)
+        .json({ message: "Both city ID and update data must be provided." });
+    }
+
+    const updatedCity = await earthquakeService.findCityAndUpdate(city, {
+      recentEarthquakes: update,
+    });
+
+    res.status(200).json(updatedCity);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const saveCountryandCity = async (req, res) => {
   try {
     const { cities, country } = req.body;
@@ -196,4 +217,5 @@ module.exports = {
   getCountries,
   getAllCities,
   saveCountryandCity,
+  findCityAndUpdate,
 };

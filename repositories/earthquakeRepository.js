@@ -20,6 +20,19 @@ const findEarthquakesByCity = async (city) => {
   return await Earthquake.find({ city });
 };
 
+const findCityAndUpdate = async (cityId, updateData) => {
+  try {
+    return await City.findOneAndUpdate(
+      { _id: cityId },
+      { $set: updateData },
+      { new: true }
+    );
+  } catch (error) {
+    console.error("Error updating city:", error);
+    throw new Error("Failed to update city.");
+  }
+};
+
 // Tüm depremleri listeleme
 const findAllEarthquakes = async () => {
   return await Earthquake.find();
@@ -54,4 +67,5 @@ module.exports = {
   findEarthquakesByScale,
   getAllCities,
   saveCountryAndCities,
+  findCityAndUpdate,
 };

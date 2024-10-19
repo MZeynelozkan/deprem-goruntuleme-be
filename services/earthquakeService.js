@@ -24,6 +24,10 @@ const saveCountryAndCities = async (countryData, cityData) => {
   return await earthquakeRepository.saveCountryAndCities(countryData, cityData);
 };
 
+const findCityAndUpdate = async (cityId, updateData) => {
+  // Repository katmanına isteği yönlendir
+  return await earthquakeRepository.findCityAndUpdate(cityId, updateData);
+};
 // Şehre göre depremleri listeleme
 const getEarthquakesByCity = async (city) => {
   if (!city) {
@@ -109,4 +113,5 @@ module.exports = {
   getCountries,
   getAllCities,
   saveCountryAndCities,
+  findCityAndUpdate,
 };

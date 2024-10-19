@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const EarthquakeSchema = new mongoose.Schema({
-  date: { type: Date, required: true },
-  magnitude: { type: Number, required: true },
-  depth: { type: Number, required: true },
+  date: { type: Date },
+  magnitude: { type: Number },
+  depth: { type: Number },
 });
 
 const CitySchema = new mongoose.Schema({
