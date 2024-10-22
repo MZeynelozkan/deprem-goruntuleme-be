@@ -17,6 +17,29 @@ const addEarthquake = async (req, res) => {
   }
 };
 
+const getEarthquakesById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const earthquake = await earthquakeService.getEarthquakesById(id);
+    res.status(200).json(earthquake);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+const deleteRecentEarthquakeById = async (req, res) => {
+  try {
+    console.log(req.params);
+    const cityId = req.params.cityId;
+    const earthquakeId = req.params.earthquakeId;
+    const deletedEarthquake =
+      await earthquakeService.deleteRecentEarthquakeById(cityId, earthquakeId);
+    res.status(200).json(deletedEarthquake);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
 const findCityAndUpdate = async (req, res) => {
   try {
     const { city, update } = req.body;
@@ -218,4 +241,6 @@ module.exports = {
   getAllCities,
   saveCountryandCity,
   findCityAndUpdate,
+  getEarthquakesById,
+  deleteRecentEarthquakeById,
 };

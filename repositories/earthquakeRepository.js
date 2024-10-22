@@ -15,6 +15,18 @@ const saveCountryAndCities = async (countryData, cityData) => {
   await city.save();
 };
 
+const getEarthquakesById = async (id) => {
+  return await City.findById(id).select("recentEarthquakes");
+};
+
+const deleteRecentEarthquakeById = async (cityId, earthquakeId) => {
+  return await City.findByIdAndUpdate(
+    cityId,
+    { $pull: { recentEarthquakes: { _id: earthquakeId } } }, // Belirli bir depremin _id'sine göre çekip sil
+    { new: true } // Güncellenmiş dokümanı döndür
+  );
+};
+
 // Belirli bir şehirdeki depremleri bulma
 const findEarthquakesByCity = async (city) => {
   return await Earthquake.find({ city });
@@ -68,4 +80,6 @@ module.exports = {
   getAllCities,
   saveCountryAndCities,
   findCityAndUpdate,
+  getEarthquakesById,
+  deleteRecentEarthquakeById,
 };
