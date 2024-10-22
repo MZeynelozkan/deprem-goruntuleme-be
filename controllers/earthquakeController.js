@@ -30,6 +30,7 @@ const getEarthquakesById = async (req, res) => {
 const deleteRecentEarthquakeById = async (req, res) => {
   try {
     console.log(req.params);
+
     const cityId = req.params.cityId;
     const earthquakeId = req.params.earthquakeId;
     const deletedEarthquake =
