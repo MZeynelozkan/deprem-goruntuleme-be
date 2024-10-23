@@ -1,6 +1,7 @@
 const express = require("express");
 const earthquakeController = require("../controllers/earthquakeController");
 const specialController = require("../controllers/specialController");
+
 const router = express.Router();
 
 // POST: Yeni bir deprem kaydetme
@@ -30,5 +31,11 @@ router.get("/countries", earthquakeController.getCountries);
 router.get("/earthquakes/:id", earthquakeController.getEarthquakesById);
 
 router.get("/", earthquakeController.getAllCities);
+router.get(
+  "/all-earth-quakes",
+  earthquakeController.getAllEarthquakesWithCityName
+);
+
+router.get("/average", earthquakeController.getAverageEarthquakeData);
 
 module.exports = router;

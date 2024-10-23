@@ -19,6 +19,73 @@ const getEarthquakesById = async (id) => {
   return await City.findById(id).select("recentEarthquakes");
 };
 
+async function getAllEarthquakesWithCityName() {
+  try {
+    // Ülkeleri şehirleriyle birlikte getir
+    const countries = await Country.find({})
+      .populate({
+        path: "cities", // Şehirleri dahil et
+        select: "name recentEarthquakes", // Şehirlerin isimlerini ve recentEarthquakes'lerini al
+      })
+      .exec();
+
+    // Tüm depremleri birleştir
+    let allEarthquakes = [];
+
+    countries.forEach((country) => {
+      country.cities.forEach((city) => {
+        city.recentEarthquakes.forEach((earthquake) => {
+          allEarthquakes.push({
+            cityName: city.name,
+            ...earthquake.toObject(), // Deprem bilgilerini al, cityName ile birleştir
+          });
+        });
+      });
+    });
+
+    // Depremleri tarihe göre (en son eklenene göre) sırala
+    allEarthquakes.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    console.log(allEarthquakes);
+    return allEarthquakes;
+  } catch (error) {
+    console.error("Error fetching earthquakes:", error);
+  }
+}
+
+async function getAverageEarthquakeData() {
+  try {
+    const results = await City.aggregate([
+      {
+        $unwind: "$recentEarthquakes", // recentEarthquakes dizisini düzleştir
+      },
+      {
+        $group: {
+          _id: null, // Gruplama yapılmayacak, tüm veriler birleştirilecek
+          totalMagnitude: { $sum: "$recentEarthquakes.magnitude" }, // Toplam büyüklüğü hesapla
+          totalDepth: { $sum: "$recentEarthquakes.depth" }, // Toplam derinliği hesapla
+          totalEarthquakes: { $sum: 1 }, // Toplam deprem sayısını hesapla
+        },
+      },
+      {
+        $project: {
+          _id: 0, // _id'yi gizle
+          averageMagnitude: {
+            $divide: ["$totalMagnitude", "$totalEarthquakes"],
+          }, // Ortalama büyüklüğü hesapla
+          averageDepth: { $divide: ["$totalDepth", "$totalEarthquakes"] }, // Ortalama derinliği hesapla
+          totalEarthquakes: 1, // Toplam deprem sayısını ekle
+        },
+      },
+    ]);
+
+    console.log(results); // Sonuçları konsola yazdır
+    return results; // Sonuçları döndür
+  } catch (error) {
+    console.error("Error fetching overall average earthquake data:", error);
+  }
+}
+
 const deleteRecentEarthquakeById = async (cityId, earthquakeId) => {
   return await City.findByIdAndUpdate(
     cityId,
@@ -82,4 +149,6 @@ module.exports = {
   findCityAndUpdate,
   getEarthquakesById,
   deleteRecentEarthquakeById,
+  getAllEarthquakesWithCityName,
+  getAverageEarthquakeData,
 };

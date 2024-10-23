@@ -20,6 +20,10 @@ const addEarthquake = async (earthquakeData) => {
   return await earthquakeRepository.saveEarthquake(earthquakeData);
 };
 
+const getAllEarthquakesWithCityName = async () => {
+  return await earthquakeRepository.getAllEarthquakesWithCityName();
+};
+
 const deleteRecentEarthquakeById = async (cityId, earthquakeId) => {
   return await earthquakeRepository.deleteRecentEarthquakeById(
     cityId,
@@ -109,6 +113,10 @@ const addCountry = async (cityId) => {
   await country.save();
 };
 
+const getAverageEarthquakeData = async () => {
+  return await earthquakeRepository.getAverageEarthquakeData();
+};
+
 const getCountries = async () => {
   return await Country.find();
 };
@@ -127,4 +135,6 @@ module.exports = {
   findCityAndUpdate,
   getEarthquakesById,
   deleteRecentEarthquakeById,
+  getAllEarthquakesWithCityName,
+  getAverageEarthquakeData,
 };
