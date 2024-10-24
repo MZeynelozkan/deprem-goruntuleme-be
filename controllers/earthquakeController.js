@@ -17,6 +17,16 @@ const addEarthquake = async (req, res) => {
   }
 };
 
+const getAllCitiesWithCountries = async (req, res) => {
+  try {
+    const citiesWithCountries =
+      await earthquakeService.getAllCitiesWithCountries();
+    res.status(200).json(citiesWithCountries);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const getAllEarthquakesWithCityName = async (req, res) => {
   try {
     const earthquakes = await earthquakeService.getAllEarthquakesWithCityName();
@@ -264,4 +274,5 @@ module.exports = {
   deleteRecentEarthquakeById,
   getAllEarthquakesWithCityName,
   getAverageEarthquakeData,
+  getAllCitiesWithCountries,
 };

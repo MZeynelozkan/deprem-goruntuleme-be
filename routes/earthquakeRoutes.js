@@ -30,7 +30,7 @@ router.get("/all", earthquakeController.getAllEarthquakes);
 router.get("/countries", earthquakeController.getCountries);
 router.get("/earthquakes/:id", earthquakeController.getEarthquakesById);
 
-router.get("/", earthquakeController.getAllCities);
+router.get("/", earthquakeController.getAllCitiesWithCountries);
 router.get(
   "/all-earth-quakes",
   earthquakeController.getAllEarthquakesWithCityName

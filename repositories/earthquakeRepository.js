@@ -138,6 +138,24 @@ const findEarthquakesByScale = async (scale) => {
   }
 };
 
+const getAllCitiesWithCountries = async () => {
+  const countries = await Country.find({}).populate("cities"); // Tüm ülkeleri ve şehir referanslarını getir
+
+  // Şehirleri ait oldukları ülke bilgileriyle birlikte düzenle
+  const citiesWithCountries = countries.flatMap((country) => {
+    return country.cities.map((city) => ({
+      ...city.toObject(),
+      country: {
+        _id: country._id,
+        name: country.name,
+        averageLocation: country.averageLocation,
+      },
+    }));
+  });
+
+  return citiesWithCountries;
+};
+
 module.exports = {
   saveEarthquake,
   findEarthquakesByCity,
@@ -151,4 +169,5 @@ module.exports = {
   deleteRecentEarthquakeById,
   getAllEarthquakesWithCityName,
   getAverageEarthquakeData,
+  getAllCitiesWithCountries,
 };
